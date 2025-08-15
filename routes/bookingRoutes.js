@@ -13,23 +13,23 @@ const auth = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Create
+// Users create bookings
 router.post('/', auth, createBooking);
 
-// Read collections
-router.get('/owner', auth, getOwnerBookings); // bookings for laundries owned by current user
-router.get('/me', auth, getMyBookings);       // bookings created by current user
+// Owners read bookings for their laundries; users read their own
+router.get('/owner', auth, getOwnerBookings);
+router.get('/me', auth, getMyBookings);
 
-// Read single
+// Single booking (owner of that laundry OR the booking user)
 router.get('/:id', auth, getBookingById);
 
-// Update full
-router.put('/:id', auth, updateBooking);
-
-// Patch status (owner only)
+// Owner manages status (confirm/cancel/pending)
 router.patch('/:id/status', auth, updateBookingStatus);
 
-// Delete
+// Booking user can edit allowed fields (scheduledAt, serviceType, notes, price)
+router.put('/:id', auth, updateBooking);
+
+// Delete (owner of laundry OR the booking user)
 router.delete('/:id', auth, deleteBooking);
 
 module.exports = router;
